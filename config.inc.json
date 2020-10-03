@@ -3,5 +3,6 @@
         "clientID": "",
         "clientSecret": "",
         "callback": ""
-    }
+    },
+    "jwt":""
 }
