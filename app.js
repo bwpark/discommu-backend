@@ -8,6 +8,13 @@ const config = require('./config.json')
 const passport = require('passport')
 const DiscordStrategy = require('passport-discord').Strategy
 const jwt = require('jsonwebtoken')
+const PassportJWT = require('passport-jwt')
+const mongoose = require('mongoose')
+
+mongoose.connect(config.database, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).then(()=>console.info('Connected to mongodb session'))
 
 passport.serializeUser((user,cb) => {
   cb(null,jwt.sign(user,config.jwt))
@@ -32,6 +39,15 @@ passport.use(new DiscordStrategy({
   cb(null,{profile})
 }))
 
+passport.use(new PassportJWT.Strategy({
+  secretOrKey: config.jwt,
+  jwtFromRequest: PassportJWT.ExtractJwt.fromAuthHeaderAsBearerToken()
+} ,(payload,done) => {
+  return done(null,{
+    profile: payload
+  })
+}))
+
 const gql = {
   typeDefs: fs.readFileSync('./graphql/schema/schema.graphql', {encoding: 'utf-8'}),
   resolvers: require('./graphql/resolver')
@@ -54,9 +70,20 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/', indexRouter)
 
+app.use('/graphql', (req, res, next) => {
+  passport.authenticate('jwt', { session: false }, (err, user, info) => {
+    if (user) {
+      req.user = user
+    }
+    next()
+  })(req, res, next)
+})
+
 const {ApolloServer} = require('apollo-server-express')
 
-const apollo = new ApolloServer({typeDefs: gql.typeDefs, resolvers: gql.resolvers})
+const apollo = new ApolloServer({typeDefs: gql.typeDefs, resolvers: gql.resolvers, context: ({req}) => ({
+  user: req.user
+})})
 
 apollo.applyMiddleware({app})
 

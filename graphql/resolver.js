@@ -1,5 +1,7 @@
 const Query = {
-    test: () => '테스트'
+    test: (parent,args,ctx) => {
+        return '테스트'
+    }
 }
 
 module.exports = {Query}
