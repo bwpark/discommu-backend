@@ -4,14 +4,38 @@ const path = require('path')
 const cookieParser = require('cookie-parser')
 const logger = require('morgan')
 const fs = require('fs')
+const config = require('./config.json')
 const passport = require('passport')
 const DiscordStrategy = require('passport-discord').Strategy
+const jwt = require('jsonwebtoken')
+
+passport.serializeUser((user,cb) => {
+  cb(null,jwt.sign(user,config.jwt))
+})
+
+passport.serializeUser((user,cb) => {
+  let payload
+  try {
+    payload = jwt.decode(user,config.jwt)
+    return cb(null,payload)
+  } catch(e) {
+    return cb(e,null)
+  }
+})
+
+passport.use(new DiscordStrategy({
+  clientID: config.oauth2.clientID,
+  clientSecret: config.oauth2.clientSecret,
+  callbackURL: config.oauth2.callback,
+  scope: ['identify', 'email']
+}, (accessToken,refreshToken,profile,cb) => {
+  cb(null,{profile})
+}))
 
 const gql = {
   typeDefs: fs.readFileSync('./graphql/schema/schema.graphql', {encoding: 'utf-8'}),
   resolvers: require('./graphql/resolver')
 }
-
 
 const indexRouter = require('./routes/index')
 
