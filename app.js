@@ -39,6 +39,7 @@ passport.use(new DiscordStrategy({
   scope: ['identify', 'email']
 }, async (accessToken,refreshToken,profile,cb) => {
   if (!await User.exists({id: profile.id})) {
+    console.log(`[CREATE] 와 새로운 유저! id: ${profile.id}`)
     const user = new User({
       id: profile.id
     })
@@ -64,10 +65,6 @@ const gql = {
 const indexRouter = require('./routes/index')
 
 const app = express()
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'))
-app.set('view engine', 'pug')
 
 app.use(logger('dev'))
 app.use(express.json())
