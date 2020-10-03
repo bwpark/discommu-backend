@@ -10,6 +10,8 @@ const DiscordStrategy = require('passport-discord').Strategy
 const jwt = require('jsonwebtoken')
 const PassportJWT = require('passport-jwt')
 const mongoose = require('mongoose')
+const {ApolloServer} = require('apollo-server-express')
+const User = require('./models/User')
 
 mongoose.connect(config.database, {
   useNewUrlParser: true,
@@ -35,7 +37,13 @@ passport.use(new DiscordStrategy({
   clientSecret: config.oauth2.clientSecret,
   callbackURL: config.oauth2.callback,
   scope: ['identify', 'email']
-}, (accessToken,refreshToken,profile,cb) => {
+}, async (accessToken,refreshToken,profile,cb) => {
+  if (!await User.exists({id: profile.id})) {
+    const user = new User({
+      id: profile.id
+    })
+    await user.save()
+  }
   cb(null,{profile})
 }))
 
@@ -78,8 +86,6 @@ app.use('/graphql', (req, res, next) => {
     next()
   })(req, res, next)
 })
-
-const {ApolloServer} = require('apollo-server-express')
 
 const apollo = new ApolloServer({typeDefs: gql.typeDefs, resolvers: gql.resolvers, context: ({req}) => ({
   user: req.user
