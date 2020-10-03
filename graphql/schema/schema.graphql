@@ -1,0 +1,7 @@
+type Auth {
+    login(username: String) : String
+}
+
+type Query {
+    test: String
+}
