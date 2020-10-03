@@ -52,9 +52,7 @@ passport.use(new PassportJWT.Strategy({
   secretOrKey: config.jwt,
   jwtFromRequest: PassportJWT.ExtractJwt.fromAuthHeaderAsBearerToken()
 } ,(payload,done) => {
-  return done(null,{
-    profile: payload
-  })
+  return done(null,payload)
 }))
 
 const gql = {
@@ -67,18 +65,24 @@ const indexRouter = require('./routes/index')
 const app = express()
 
 app.use(logger('dev'))
+
 app.use(express.json())
+
 app.use(express.urlencoded({ extended: false }))
+
 app.use(cookieParser())
+
 app.use(passport.initialize())
+
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/', indexRouter)
 
 app.use('/graphql', (req, res, next) => {
-  passport.authenticate('jwt', { session: false }, (err, user, info) => {
+  passport.authenticate('jwt', { session: false }, async (err, user, info) => {
     if (user) {
       req.user = user
+      req.user.fetched = await User.findOne({id: user.profile.id})
     }
     next()
   })(req, res, next)

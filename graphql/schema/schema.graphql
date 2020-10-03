@@ -1,7 +1,18 @@
-type Auth {
-    login(username: String) : String
+type UserProfile {
+    id: String!
+    email: String!
+}
+
+type FetchedUser {
+    follow: [String]!
+    permissions: [String]!
+}
+
+type User {
+    profile: UserProfile!
+    fetched: FetchedUser!
 }
 
 type Query {
-    test: String
+    user: User
 }
