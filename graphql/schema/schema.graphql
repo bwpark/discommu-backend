@@ -4,6 +4,7 @@ type UserProfile {
 }
 
 type FetchedUser {
+    id: String!
     follow: [String]!
     permissions: [String]!
 }
