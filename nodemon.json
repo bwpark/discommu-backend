@@ -1,6 +1,0 @@
-{
-    "events": {
-        "restart": "echo restarting;fuser -kn tcp 5000"
-    },
-    "delay": "2500"
-}

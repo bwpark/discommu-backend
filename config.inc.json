@@ -1,8 +1,0 @@
-{
-    "oauth2": {
-        "clientID": "",
-        "clientSecret": "",
-        "callback": ""
-    },
-    "jwt":""
-}
