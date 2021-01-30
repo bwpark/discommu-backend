@@ -1,2 +1,3 @@
 # DISCOMMU-BACKEND
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/2b4d9ca6bbdd4469abc29d849bf20fea)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Team-Kat/discommu-backend&amp;utm_campaign=Badge_Grade)
+
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/2b4d9ca6bbdd4469abc29d849bf20fea)](https://www.codacy.com?utm_source=github.com&utm_medium=referral&utm_content=Team-Kat/discommu-backend&utm_campaign=Badge_Grade)
