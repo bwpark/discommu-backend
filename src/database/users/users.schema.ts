@@ -4,7 +4,7 @@ import { findOneOrCreate } from "./users.statics";
 import { addFollowing, removeFollowing, addPermissions, removePermissions } from "./users.methods";
 import { IUserDocument, IUserModel } from "./users.types";
 
-const UserSchema = new Schema<any>({
+const UserSchema = new Schema<IUserDocument, IUserModel>({
     discordID: String,
     point: {
         type: Number,

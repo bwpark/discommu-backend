@@ -1,3 +1,4 @@
+import UserSchema from "./users.schema";
 import { IUserDocument, IUserModel, IUser } from "./users.types";
 
 export async function findOneOrCreate(

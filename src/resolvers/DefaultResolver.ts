@@ -1,4 +1,4 @@
-import { Resolver, Mutation, Arg, Ctx } from "type-graphql";
+import { Resolver, Mutation, Arg, Ctx, Query } from "type-graphql";
 import { URLSearchParams } from "url"
 
 import { safeFetch } from "../util";
@@ -7,7 +7,12 @@ import { UserModel } from "../database/users/users.models";
 import config from "../../config.json";
 
 @Resolver()
-export default class {
+export default class DefaultResolver {
+    @Query(returns => String)
+    hello() {
+        return 'world'
+    }
+
     @Mutation((returns) => String, { nullable: true })
     async login(@Arg("code") code: string, @Ctx() ctx: any) {
         if (ctx.user) return null;

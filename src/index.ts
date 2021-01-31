@@ -13,6 +13,7 @@ import { ApolloServer } from "apollo-server-express";
     const schema = await buildSchema({
         resolvers: [DefaultResolver],
     });
+
     const apollo = new ApolloServer({
         schema
     });
