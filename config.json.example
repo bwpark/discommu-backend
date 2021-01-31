@@ -1,0 +1,15 @@
+{
+    "port": 8080,
+    "discordAPIEndpoint": "https://discord.com/api/v8",
+
+    "oauth2": {
+        "clientID": "",
+        "clientSecret": "",
+        "redirectURI": "http://localhost:8080/callback/auth"
+    },
+
+    "db": {
+        "password": "",
+        "url": ""
+    }
+}
