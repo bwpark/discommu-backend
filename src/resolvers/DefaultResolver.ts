@@ -3,7 +3,9 @@ import { URLSearchParams } from "url"
 
 import { safeFetch } from "../util";
 import { UserModel } from "../database/users/users.models";
+import { sign } from "jsonwebtoken";
 
+import fetch from "node-fetch";
 import config from "../../config.json";
 
 @Resolver()
@@ -12,6 +14,14 @@ export default class DefaultResolver {
     hello() {
         return 'world'
     }
+
+    @Query((returns) => String)
+    loginURL() {
+        return (
+            `${config.discordAPIEndpoint}/oauth2/authorize?client_id=${config.oauth2.clientID}&redirect_uri=${config.oauth2.redirectURI}&scope=identify&response_type=code`
+        )
+    }
+
 
     @Mutation((returns) => String, { nullable: true })
     async login(@Arg("code") code: string, @Ctx() ctx: any) {
@@ -48,6 +58,6 @@ export default class DefaultResolver {
         if (user.status !== 200) return null;
 
         const userInfo = await UserModel.findOneOrCreate({ discordID: json2.id });
-        console.log({ ...json, ...json2 })
+        return sign({ id: userInfo.discordID, username: json2.username, avatar: `https://cdn.discordapp.com/avatars/${userInfo.discordID}/${json2.avatar}.png` }, config.jwtSecret)
     }
 }

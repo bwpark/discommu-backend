@@ -1,6 +1,7 @@
 {
     "port": 8080,
     "discordAPIEndpoint": "https://discord.com/api/v8",
+    "jwtSecret": "",
 
     "oauth2": {
         "clientID": "",
