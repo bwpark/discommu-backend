@@ -8,10 +8,10 @@ export interface IUser {
 }
 
 export interface IUserDocument extends Document, IUser {
-    addFollowing: (this: IUserModel, userID: string) => Promise<void>;
-    removeFollowing: (this: IUserModel, userID: string) => Promise<void>;
-    addPermissions: (this: IUserModel, permission: string) => Promise<void>;
-    removePermissions: (this: IUserModel, permission: string) => Promise<void>;
+    addFollowing: (this: IUserDocument, userID: string) => Promise<void>;
+    removeFollowing: (this: IUserDocument, userID: string) => Promise<void>;
+    addPermissions: (this: IUserDocument, permission: string) => Promise<void>;
+    removePermissions: (this: IUserDocument, permission: string) => Promise<void>;
 };
 
 export interface IUserModel extends Model<IUserDocument> {
