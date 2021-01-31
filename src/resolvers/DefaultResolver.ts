@@ -1,18 +1,19 @@
 import { Resolver, Mutation, Arg, Ctx, Query } from "type-graphql";
 import { URLSearchParams } from "url"
 
-import { safeFetch } from "../util";
+import { safeFetch, userInfoCache } from "../util";
 import { UserModel } from "../database/users/users.models";
 import { sign } from "jsonwebtoken";
 
 import fetch from "node-fetch";
 import config from "../../config.json";
+import User from '../types/User'
 
 @Resolver()
 export default class DefaultResolver {
-    @Query(returns => String)
-    hello() {
-        return 'world'
+    @Query((returns) => User, { nullable: true })
+    me(@Ctx() ctx) {
+      return ctx.user
     }
 
     @Query((returns) => String)
@@ -58,6 +59,13 @@ export default class DefaultResolver {
         if (user.status !== 200) return null;
 
         const userInfo = await UserModel.findOneOrCreate({ discordID: json2.id });
-        return sign({ id: userInfo.discordID, username: json2.username, avatar: `https://cdn.discordapp.com/avatars/${userInfo.discordID}/${json2.avatar}.png` }, config.jwtSecret)
+        userInfoCache[userInfo.discordID] = {
+            username: json2.username,
+            avatarURL: json2.avatar
+                ? `https://cdn.discordapp.com/avatars/${userInfo.discordID}/${json2.avatar}.png`
+                : `https://cdn.discordapp.com/embed/avatars/${Number(json2.discriminator) % 5}.png`,
+            discriminator: json2.discriminator
+        };
+        return sign({ id: userInfo.discordID, ...userInfoCache[userInfo.discordID] }, config.jwtSecret);
     }
 }

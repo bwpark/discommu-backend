@@ -1,4 +1,7 @@
 import fetch, { RequestInfo, RequestInit, Response } from "node-fetch";
+import { UserModel } from "./database/users/users.models";
+
+export let userInfoCache = {}
 
 export const safeFetch = (
     info: RequestInfo,
@@ -22,3 +25,12 @@ export const safeFetch = (
     }
     resolve(data);
 });
+
+export const getUser = async (
+    userID: string
+) => {
+    if (!userInfoCache[userID]) return null;
+    const userInfo = (await UserModel.find({ discordID: userID }))[0];
+    if (!userInfo) return null;
+    return {dicordID: userInfo.discordID, permissions: userInfo.permissions, following: userInfo.following, ...userInfoCache[userID]};
+}

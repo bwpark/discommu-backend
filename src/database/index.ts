@@ -1,10 +1,10 @@
 import Mongoose from "mongoose";
 import config from '../../config.json'
 
-let database: Mongoose.Connection;
+export let db: Mongoose.Connection;
 
 export const connect = () => {
-    if (database) return;
+    if (db) disconnect();
 
     Mongoose.connect(`mongodb+srv://admin:${config.db.password}@${config.db.url}/discommu?retryWrites=true&w=majority`, {
         useNewUrlParser: true,
@@ -13,17 +13,17 @@ export const connect = () => {
         useCreateIndex: true
     });
 
-    database = Mongoose.connection;
-    database.once("open", async () => {
+    db = Mongoose.connection;
+    db.once("open", async () => {
         console.log("LOG> Database Ready");
     });
-    database.on("error", () => {
+    db.on("error", () => {
         console.log("LOG> Database Connection error");
     });
 }
 
 export const disconnect = () => {
-    if (!database) return;
+    if (!db) return;
     Mongoose.disconnect();
     console.log("LOG> Database Disconnect");
 }
