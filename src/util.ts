@@ -1,6 +1,8 @@
 import fetch, { RequestInfo, RequestInit, Response } from "node-fetch";
 import { UserModel } from "./database/users/users.models";
 
+import config from "../config.json"
+
 export let userInfoCache = {}
 
 export const safeFetch = (
@@ -26,11 +28,34 @@ export const safeFetch = (
     resolve(data);
 });
 
-export const getUser = async (
-    userID: string
-) => {
-    if (!userInfoCache[userID]) return null;
-    const userInfo = (await UserModel.find({ discordID: userID }))[0];
+export const getDiscordUser = async (userID: string) => {
+    if (userInfoCache[userID]) return userInfoCache[userID];
+    const res = await safeFetch(
+        `${config.discordAPIEndpoint}/users/${userID}`,
+        {
+            headers: {
+                Authorization: `Bot ${config.botToken}`
+            }
+        }
+    );
+    if (res.status !== 200) return null;
+    const json = await res.json();
+    const data = {
+        username: json.username,
+        avatarURL: json.avatar
+            ? `https://cdn.discordapp.com/avatars/${json.id}/${json.avatar}.png`
+            : `https://cdn.discordapp.com/embed/avatars/${Number(json.discriminator) % 5}.png`,
+        discriminator: json.discriminator
+    }
+
+    userInfoCache[json.id] = data
+
+    return data
+}
+
+export const getUser = async (userID: string) => {
+    if (!userInfoCache[userID]) getDiscordUser(userID);
+    const userInfo = new UserModel({ discordID: userID });
     if (!userInfo) return null;
-    return {dicordID: userInfo.discordID, permissions: userInfo.permissions, following: userInfo.following, ...userInfoCache[userID]};
+    return {id: userInfo.discordID, userInfo: userInfo, ...userInfoCache[userID]};
 }

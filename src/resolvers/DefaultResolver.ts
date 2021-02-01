@@ -1,7 +1,7 @@
 import { Resolver, Mutation, Arg, Ctx, Query } from "type-graphql";
 import { URLSearchParams } from "url"
 
-import { safeFetch, userInfoCache } from "../util";
+import { safeFetch, userInfoCache, getUser } from "../util";
 import { UserModel } from "../database/users/users.models";
 import { sign } from "jsonwebtoken";
 
@@ -16,6 +16,12 @@ export default class DefaultResolver {
       return ctx.user
     }
 
+    @Query((returns) => User, { nullable: true })
+    async user(@Arg("id") id: string) {
+        await getUser(id);
+        return { id: id, ...userInfoCache[id] }
+    }
+
     @Query((returns) => String)
     loginURL() {
         return (
@@ -23,6 +29,19 @@ export default class DefaultResolver {
         )
     }
 
+    @Mutation((returns) => Boolean, { nullable: true })
+    async follow(@Arg("id") id: string, @Ctx() ctx: any) {
+        if (!ctx.user) return null;
+
+        const followuser = await getUser(id);
+        if (!followuser) return null;
+
+        const user = await getUser(ctx.user.id);
+        if (user.userInfo.following.includes(id)) return null;
+
+        await user.userInfo.addFollowing(id);
+        return true;
+    }
 
     @Mutation((returns) => String, { nullable: true })
     async login(@Arg("code") code: string, @Ctx() ctx: any) {
