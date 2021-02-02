@@ -1,8 +1,10 @@
 import { IUserDocument } from "./users.types";
+import { UserModel } from "./users.models";
 
 export async function addFollowing(this: IUserDocument, userID: string): Promise<void> {
     if (this.following?.includes(userID)) return;
     this.following?.push(userID);
+    await UserModel.updateOne(this["_doc"], { $set: { following: this.following? } });
 }
 
 export async function removeFollowing(this: IUserDocument, userID: string): Promise<void> {
