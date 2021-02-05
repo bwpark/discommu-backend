@@ -10,6 +10,4 @@ export interface ICategoryDocument extends Document, ICategory {
     editDescription: (this: ICategoryDocument, description: string) => Promise<void>;
 };
 
-export interface ICategoryModel extends Model<ICategoryDocument> {
-    findOneOrCreate: (data: ICategory) => Promise<ICategoryDocument>;
-};
+export interface ICategoryModel extends Model<ICategoryDocument> {};
