@@ -7,7 +7,7 @@ import { sign } from "jsonwebtoken";
 
 import fetch from "node-fetch";
 import config from "../../config.json";
-import User from '../types/User'
+import User from "../types/User";
 
 @Resolver()
 export default class DefaultResolver {
@@ -27,66 +27,6 @@ export default class DefaultResolver {
         return (
             `${config.discordAPIEndpoint}/oauth2/authorize?client_id=${config.oauth2.clientID}&redirect_uri=${config.oauth2.redirectURI}&scope=identify&response_type=code`
         )
-    }
-
-    @Mutation((returns) => Boolean, { nullable: true })
-    async follow(@Arg("id") id: string, @Ctx() ctx: any) {
-        if (!ctx.user) return null;
-
-        const followuser = await getUser(id);
-        if (!followuser) return null;
-
-        const user = await getUser(ctx.user.id);
-        if (user.userInfo.following.includes(id)) return null;
-
-        await user.userInfo.addFollowing(id);
-        return true;
-    }
-
-    @Mutation((returns) => Boolean, { nullable: true })
-    async unfollow(@Arg("id") id: string, @Ctx() ctx: any) {
-        if (!ctx.user) return null;
-
-        const followuser = await getUser(id);
-        if (!followuser) return null;
-
-        const user = await getUser(ctx.user.id);
-        if (!user.userInfo.following.includes(id)) return null;
-
-        await user.userInfo.removeFollowing(id);
-        return true;
-    }
-
-    @Mutation((returns) => Boolean, { nullable: true })
-    async addpermission(@Arg("userID") userID: string, @Arg("permission") perm: string, @Ctx() ctx: any) {
-        if (!config.permissions.includes(perm)) return;
-        if (!ctx.user) return null;
-
-        const user = await getUser(ctx.user.id);
-        if (user.userInfo.permissions.includes("admin")) return null;
-
-        const adduser = await getUser(userID);
-        if (!adduser) return null;
-        if (user.userInfo.permissions.includes(perm)) return null;
-
-        await adduser.userInfo.addPermissions(perm);
-        return true;
-    }
-
-    @Mutation((returns) => Boolean, { nullable: true })
-    async removepermission(@Arg("userID") userID: string, @Arg("permission") perm: string, @Ctx() ctx: any) {
-        if (!config.permissions.includes(perm)) return;
-        if (!ctx.user) return null;
-
-        const user = await getUser(ctx.user.id);
-        if (!user.userInfo.permissions.includes("admin")) return null;
-
-        const adduser = await getUser(userID);
-        if (!adduser) return null;
-        if (!user.userInfo.permissions.includes(perm)) return null;
-
-        await adduser.userInfo.removePermissions(perm);
-        return true;
     }
 
     @Mutation((returns) => String, { nullable: true })

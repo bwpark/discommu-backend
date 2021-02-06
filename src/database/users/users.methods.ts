@@ -10,6 +10,7 @@ export async function addFollowing(this: IUserDocument, userID: string): Promise
 
 export async function removeFollowing(this: IUserDocument, userID: string): Promise<void> {
     if (!this.following?.includes(userID)) return;
+    console.log(this.following, this.following?.filter(i => i !== userID))
     this.following = this.following?.filter(i => i !== userID);
     await this.save();
 }

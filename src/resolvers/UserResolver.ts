@@ -1,5 +1,4 @@
-import { ApolloError } from 'apollo-server-express'
-import { Arg, Ctx, FieldResolver, Resolver, Root } from 'type-graphql'
+import { FieldResolver, Resolver, Root } from 'type-graphql'
 import User from '../types/User'
 import { getUser } from '../util'
 
