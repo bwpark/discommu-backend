@@ -12,7 +12,7 @@ import { getUser } from "./util";
 import DefaultResolver from "./resolvers/DefaultResolver";
 import MutationResolver from "./resolvers/MutationResolver";
 import UserResolver from "./resolvers/UserResolver";
-import UserMutationResolver from "./resolvers/UserMutationResolver";
+// import UserMutationResolver from "./resolvers/UserMutationResolver";
 
 process.on("exit", () => {
     disconnect();
@@ -21,7 +21,9 @@ process.on("exit", () => {
 
 (async () => {
     const schema = await buildSchema({
-        resolvers: [DefaultResolver, MutationResolver, UserResolver, UserMutationResolver],
+        resolvers: [DefaultResolver, MutationResolver, UserResolver,
+            // UserMutationResolver
+        ],
     });
 
     const apollo = new ApolloServer({

@@ -54,7 +54,7 @@ export const getDiscordUser = async (userID: string) => {
 }
 
 export const getUser = async (userID: string) => {
-    if (!userInfoCache[userID]) getDiscordUser(userID);
+    if (!userInfoCache[userID]) await getDiscordUser(userID);
     const userInfo = await UserModel.findOne({ discordID: userID });
     if (!userInfo) return null;
     return {id: userInfo.discordID, userInfo: userInfo, ...userInfoCache[userID]};

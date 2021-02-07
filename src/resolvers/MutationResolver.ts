@@ -12,7 +12,8 @@ export default class MutationResolver {
 
     @Mutation((returns) => UserMutation, { nullable: true })
     async user(@Arg("id") id: string) {
-        await getUser(id);
+        const u = await getUser(id)
+        if (u === null) return null
         return { id: id, ...userInfoCache[id] }
     }
 }
