@@ -12,7 +12,6 @@ import { getUser } from "./util";
 import DefaultResolver from "./resolvers/DefaultResolver";
 import MutationResolver from "./resolvers/MutationResolver";
 import UserResolver from "./resolvers/UserResolver";
-// import UserMutationResolver from "./resolvers/UserMutationResolver";
 
 process.on("exit", () => {
     disconnect();
@@ -21,8 +20,8 @@ process.on("exit", () => {
 
 (async () => {
     const schema = await buildSchema({
-        resolvers: [DefaultResolver, MutationResolver, UserResolver,
-            // UserMutationResolver
+        resolvers: [
+            DefaultResolver, MutationResolver, UserResolver
         ],
     });
 
@@ -42,6 +41,20 @@ process.on("exit", () => {
             if (!data) return null;
 
             return res;
+        },
+        logger: {  
+            warn(message?: any) {
+                console.warn(message)
+            },
+            debug(message?: any) {
+                console.debug(message)
+            },
+            error(message?: any) {
+                console.error(message)
+            },
+            info(message?: any) {
+                console.info(message)
+            }
         }
     });
 

@@ -1,7 +1,7 @@
 import { Field, ID, ObjectType } from 'type-graphql'
 
 @ObjectType()
-class User {
+export default class User {
     @Field(type => ID)
     id: string
 
@@ -20,5 +20,3 @@ class User {
     @Field(type => [String])
     following: string[]
 }
-
-export default User

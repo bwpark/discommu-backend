@@ -1,25 +1,32 @@
-import { Resolver, Mutation, Arg, Ctx, Query } from "type-graphql";
-import { URLSearchParams } from "url"
+import { Resolver, Arg, Ctx, Query } from "type-graphql";
 
-import { safeFetch, userInfoCache, getUser } from "../util";
-import { UserModel } from "../database/users/users.models";
-import { sign } from "jsonwebtoken";
+import { userInfoCache, getUser } from "../util";
+import { CategoryModel } from "../database";
 
-import fetch from "node-fetch";
 import config from "../../config.json";
 import User from "../types/User";
+import Category from "../types/Category";
 
 @Resolver()
 export default class DefaultResolver {
     @Query((returns) => User, { nullable: true })
     me(@Ctx() ctx) {
-      return ctx.user
+        if (!ctx.user) return null;
+        return ctx.user
     }
 
     @Query((returns) => User, { nullable: true })
     async user(@Arg("id") id: string) {
-        await getUser(id);
+        if (!(await getUser(id))) return null;
         return { id: id, ...userInfoCache[id] }
+    }
+
+    @Query((returns) => Category, { nullable: true })
+    async category(@Ctx() ctx, @Arg("name") name: string) {
+        if (!ctx.user) return null;
+        const categoryInfo = await CategoryModel.findOne({ name: name });
+        if (!categoryInfo) return null;
+        return { author: categoryInfo.authorID, name: categoryInfo.name, description: categoryInfo.description };
     }
 
     @Query((returns) => String)
@@ -27,50 +34,5 @@ export default class DefaultResolver {
         return (
             `${config.discordAPIEndpoint}/oauth2/authorize?client_id=${config.oauth2.clientID}&redirect_uri=${config.oauth2.redirectURI}&scope=identify&response_type=code`
         )
-    }
-
-    @Mutation((returns) => String, { nullable: true })
-    async login(@Arg("code") code: string, @Ctx() ctx: any) {
-        if (ctx.user) return null;
-
-        const res = await fetch(config.discordAPIEndpoint + "/oauth2/token", {
-            body: new URLSearchParams({
-                client_id: config.oauth2.clientID,
-                code,
-                client_secret: config.oauth2.clientSecret,
-                redirect_uri: config.oauth2.redirectURI,
-                grant_type: "authorization_code",
-                scope: "identify"
-            }),
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            method: "POST"
-        });
-
-        const json = await res.json();
-        if ((res.status !== 200) || (!json.access_token)) return null;
-
-        const user = await safeFetch(
-            `${config.discordAPIEndpoint}/users/@me`,
-            {
-                headers: {
-                    Authorization: `${json.token_type} ${json.access_token}`
-                }
-            }
-        );
-
-        const json2 = await user.json();
-        if (user.status !== 200) return null;
-
-        const userInfo = await UserModel.findOneOrCreate({ discordID: json2.id });
-        userInfoCache[userInfo.discordID] = {
-            username: json2.username,
-            avatarURL: json2.avatar
-                ? `https://cdn.discordapp.com/avatars/${userInfo.discordID}/${json2.avatar}.png`
-                : `https://cdn.discordapp.com/embed/avatars/${Number(json2.discriminator) % 5}.png`,
-            discriminator: json2.discriminator
-        };
-        return sign({ id: userInfo.discordID, ...userInfoCache[userInfo.discordID] }, config.jwtSecret);
     }
 }

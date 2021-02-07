@@ -1,5 +1,5 @@
 import fetch, { RequestInfo, RequestInit, Response } from "node-fetch";
-import { UserModel } from "./database/users/users.models";
+import { UserModel } from "./database";
 
 import config from "../config.json"
 

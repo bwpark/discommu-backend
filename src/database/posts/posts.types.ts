@@ -1,5 +1,10 @@
 import { Document, Model } from "mongoose"
 
+type comment = {
+    authorID: string,
+    comment: string
+}
+
 export interface IPost {
     authorID: string;
     title: string;
@@ -8,7 +13,7 @@ export interface IPost {
 
     tag?: string[];
     hearts?: string[];
-    comments?: object[];
+    comments?: comment[];
 }
 
 export interface IPostDocument extends Document, IPost {

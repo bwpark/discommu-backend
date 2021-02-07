@@ -5,7 +5,7 @@ import Category from '../types/Category'
 export default class {
     @FieldResolver()
     async author(@Root() parent: Category) {
-        return parent.authorID;
+        return parent.author;
     }
 
     @FieldResolver()
@@ -15,6 +15,6 @@ export default class {
 
     @FieldResolver()
     async description(@Root() parent: Category) {
-        return parent.authorID;
+        return parent.description;
     }
 }

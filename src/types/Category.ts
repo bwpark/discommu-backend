@@ -1,9 +1,9 @@
 import { Field, ObjectType } from 'type-graphql'
 
 @ObjectType()
-class Category {
+export default class Category {
     @Field()
-    authorID: string
+    author: string
 
     @Field()
     name: string
@@ -11,5 +11,3 @@ class Category {
     @Field()
     description: string
 }
-
-export default Category;
