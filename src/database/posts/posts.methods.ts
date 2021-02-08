@@ -29,24 +29,37 @@ export async function removeHeart(this: IPostDocument, userID: string): Promise<
     await this.save();
 }
 
-export async function addComment(this: IPostDocument, userID: string, content: string): Promise<number> {
-    this.comments?.push({ authorID: userID, comment: content });
+export async function addComment(this: IPostDocument, userID: string, content: string): Promise<string> {
+    const randID = () => {
+        const randCh = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+        return randCh() + randCh() + randCh() + randCh();
+    }
+    const commentID = randID();
+    this.comments?.push({ commentID: commentID, authorID: userID, comment: content });
     await this.save();
-    return this.comments?.length - 1;
+    return commentID;
 }
 
-export async function removeComment(this: IPostDocument, commentID: number, authorID: string): Promise<void> {
-    if (!this.comments[commentID]) return;
-    if (this.comments[commentID].authorID !== authorID) return;
+export async function getComment(this: IPostDocument, commentID: string): Promise<string> {
+    for (const i in this.comments) {
+        if (this.comments[i].commentID === commentID) return i;
+    }
+}
 
-    delete this.comments[commentID];
+export async function removeComment(this: IPostDocument, commentID: string, authorID: string): Promise<void> {
+    const commentNum = await this.getComment(commentID);
+    if (!this.comments[commentNum]) return;
+    if (this.comments[commentNum].authorID !== authorID) return;
+
+    delete this.comments[commentNum];
     await this.save();
 }
 
-export async function editComment(this: IPostDocument, commentID: number, authorID: string, content: string): Promise<void> {
-    if (!this.comments[commentID]) return;
-    if (this.comments[commentID].authorID !== authorID) return;
+export async function editComment(this: IPostDocument, commentID: string, authorID: string, content: string): Promise<void> {
+    const commentNum = await this.getComment(commentID);
+    if (!this.comments[commentNum]) return;
+    if (this.comments[commentNum].authorID !== authorID) return;
 
-    this.comments[commentID].comment = content;
+    this.comments[commentNum].comment = content;
     await this.save();
 }

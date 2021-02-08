@@ -1,11 +1,12 @@
 import { Resolver, Arg, Ctx, Query } from "type-graphql";
 
 import { userInfoCache, getUser } from "../util";
-import { CategoryModel } from "../database";
+import { CategoryModel, PostModel } from "../database";
 
 import config from "../../config.json";
 import User from "../types/User";
 import Category from "../types/Category";
+import Post from "../types/Post";
 
 @Resolver()
 export default class DefaultResolver {
@@ -27,6 +28,14 @@ export default class DefaultResolver {
         const categoryInfo = await CategoryModel.findOne({ name: name });
         if (!categoryInfo) return null;
         return { author: categoryInfo.authorID, name: categoryInfo.name, description: categoryInfo.description };
+    }
+
+    @Query((returns) => Post, { nullable: true })
+    async post(@Ctx() ctx, @Arg("title") title: string) {
+        if (!ctx.user) return null;
+        const postInfo = await PostModel.findOne({ title: title });
+        if (!postInfo) return null;
+        return { author: postInfo.authorID, title: postInfo.title, content: postInfo.content, category: postInfo.category, tag: postInfo.tag, hearts: postInfo.hearts, comments: postInfo.comments };
     }
 
     @Query((returns) => String)
