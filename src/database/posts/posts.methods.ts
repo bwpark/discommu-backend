@@ -28,38 +28,3 @@ export async function removeHeart(this: IPostDocument, userID: string): Promise<
     this.hearts = this.hearts?.filter(i => i !== userID);
     await this.save();
 }
-
-export async function addComment(this: IPostDocument, userID: string, content: string): Promise<string> {
-    const randID = () => {
-        const randCh = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-        return randCh() + randCh() + randCh() + randCh();
-    }
-    const commentID = randID();
-    this.comments?.push({ commentID: commentID, authorID: userID, comment: content });
-    await this.save();
-    return commentID;
-}
-
-export async function getComment(this: IPostDocument, commentID: string): Promise<string> {
-    for (const i in this.comments) {
-        if (this.comments[i].commentID === commentID) return i;
-    }
-}
-
-export async function removeComment(this: IPostDocument, commentID: string, authorID: string): Promise<void> {
-    const commentNum = await this.getComment(commentID);
-    if (!this.comments[commentNum]) return;
-    if (this.comments[commentNum].authorID !== authorID) return;
-
-    delete this.comments[commentNum];
-    await this.save();
-}
-
-export async function editComment(this: IPostDocument, commentID: string, authorID: string, content: string): Promise<void> {
-    const commentNum = await this.getComment(commentID);
-    if (!this.comments[commentNum]) return;
-    if (this.comments[commentNum].authorID !== authorID) return;
-
-    this.comments[commentNum].comment = content;
-    await this.save();
-}

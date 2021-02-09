@@ -1,8 +1,8 @@
-import { ObjectType, Field, Root, Ctx, Arg } from 'type-graphql'
-import { getUser } from '../util'
-import { CategoryModel } from '../database'
+import { ObjectType, Field, Root, Ctx, Arg } from "type-graphql";
+import { getUser } from "../util";
+import { CategoryModel } from "../database";
 
-import Category from './Category'
+import Category from "./Category";
 
 @ObjectType()
 export default class CategoryMutation {

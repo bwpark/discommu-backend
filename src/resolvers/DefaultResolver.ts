@@ -1,7 +1,7 @@
 import { Resolver, Arg, Ctx, Query } from "type-graphql";
 
 import { userInfoCache, getUser } from "../util";
-import { CategoryModel, PostModel } from "../database";
+import { CategoryModel, PostModel, CommentModel } from "../database";
 
 import config from "../../config.json";
 import User from "../types/User";
@@ -31,11 +31,11 @@ export default class DefaultResolver {
     }
 
     @Query((returns) => Post, { nullable: true })
-    async post(@Ctx() ctx, @Arg("title") title: string) {
+    async post(@Ctx() ctx, @Arg("id") id: string) {
         if (!ctx.user) return null;
-        const postInfo = await PostModel.findOne({ title: title });
+        const postInfo = await PostModel.findById(id);
         if (!postInfo) return null;
-        return { author: postInfo.authorID, title: postInfo.title, content: postInfo.content, category: postInfo.category, tag: postInfo.tag, hearts: postInfo.hearts, comments: postInfo.comments };
+        return { _id: id, author: postInfo.authorID, title: postInfo.title, content: postInfo.content, category: postInfo.category, tag: postInfo.tag, hearts: postInfo.hearts, comments: await CommentModel.findByPost(id) };
     }
 
     @Query((returns) => String)

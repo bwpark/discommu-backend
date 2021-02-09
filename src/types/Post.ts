@@ -1,9 +1,11 @@
-import { Field, ObjectType } from 'type-graphql'
+import { Field, ObjectType, ID } from 'type-graphql'
 
 type comment = {
-    commentID: string,
+    _id: string,
     authorID: string,
-    comment: string
+    content: string,
+    timestamp: number,
+    reply: string
 }
 
 @ObjectType()
@@ -12,14 +14,23 @@ class Comment {
     authorID: string
 
     @Field()
-    commentID: string
+    _id: string
 
     @Field()
-    comment: string
+    content: string
+
+    @Field()
+    timestamp: number
+
+    @Field()
+    reply: string
 }
 
 @ObjectType()
 export default class Post {
+    @Field(type => ID)
+    _id: string
+
     @Field()
     author: string
 
@@ -31,6 +42,9 @@ export default class Post {
 
     @Field()
     category: string
+
+    @Field()
+    timestamp: number
 
     @Field(type => [String])
     tag: string[]

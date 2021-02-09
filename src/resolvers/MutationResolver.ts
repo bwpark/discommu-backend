@@ -2,9 +2,10 @@ import { Resolver, Mutation, Arg, Ctx } from "type-graphql";
 import { URLSearchParams } from "url"
 import { sign } from "jsonwebtoken";
 import { userInfoCache, getUser, safeFetch } from "../util";
-import { CategoryModel, UserModel } from "../database";
+import { CategoryModel, UserModel, PostModel } from "../database";
 
 import AddCategory from "../inputs/AddCategory";
+import AddPost from "../inputs/AddPost";
 
 import config from "../../config.json";
 import fetch from "node-fetch";
@@ -36,11 +37,28 @@ export default class MutationResolver {
     @Mutation((returns) => Boolean, { nullable: true })
     async addCategory(@Ctx() ctx, @Arg("data") data: AddCategory) {
         if (!ctx.user) return false;
-        if ((!data.name) || (!data.description)) return false;
 
         if (await CategoryModel.findOne({ name: data.name })) return false;
         await CategoryModel.create({ name: data.name, description: data.description});
         return true;
+    }
+
+    @Mutation((returns) => String, { nullable: true })
+    async addPost(@Ctx() ctx, @Arg("data") data: AddPost) {
+        console.log(data)
+        if (!ctx.user) return false;
+        data.tag = data.tag ? data.tag.filter(tag => tag.length) : [];
+
+        if (!(await CategoryModel.findOne({ name: data.category }))) return false;
+        const post = await PostModel.create({
+            authorID: ctx.user.id,
+            title: data.title,
+            content: data.content,
+            category: data.category,
+            timestamp: Date.now(),
+            tag: data.tag
+        })
+        return post._id;
     }
 
     @Mutation((returns) => String, { nullable: true })

@@ -1,5 +1,4 @@
-import { urlencoded } from "express";
-import { IPostDocument, IPostModel, IPost } from "./posts.types";
+import { IPostDocument, IPostModel } from "./posts.types";
 
 export async function findByTag(
     this: IPostModel,
