@@ -14,7 +14,7 @@ export default class PostMutation {
         data.tag = data.tag ? data.tag.filter(tag => tag.length) : [];
 
         const user = await getUser(ctx.user.id);
-        if ((user.userID !== root.author) && (!user.userInfo.permissions.includes("admin"))) return false;
+        if ((user.userID !== root.authorID) && (!user.userInfo.permissions.includes("admin"))) return false;
 
         await PostModel.findByIdAndUpdate(root._id, { $set: { title: data.title, content: data.content, tag: data.tag } })
         return true;
@@ -25,7 +25,7 @@ export default class PostMutation {
         if (!ctx.user) return false;
 
         const user = await getUser(ctx.user.id);
-        if ((user.userID !== root.author) && (!user.userInfo.permissions.includes("admin"))) return false;
+        if ((user.userID !== root.authorID) && (!user.userInfo.permissions.includes("admin"))) return false;
 
         await PostModel.findByIdAndDelete(root._id);
         return true;

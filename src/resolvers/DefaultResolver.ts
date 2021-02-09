@@ -1,7 +1,7 @@
 import { Resolver, Arg, Ctx, Query } from "type-graphql";
 
-import { userInfoCache, getUser } from "../util";
-import { CategoryModel, PostModel, CommentModel } from "../database";
+import { getUser } from "../util";
+import { CategoryModel, PostModel, CommentModel, UserModel } from "../database";
 
 import config from "../../config.json";
 import User from "../types/User";
@@ -13,13 +13,14 @@ export default class DefaultResolver {
     @Query((returns) => User, { nullable: true })
     me(@Ctx() ctx) {
         if (!ctx.user) return null;
-        return ctx.user
+        return { id: ctx.user.discordID, discriminator: ctx.user.discriminator, username: ctx.user.username, avatarURL: ctx.user.avatarURL, permissions: ctx.user.userInfo.permissions, following: ctx.user.userInfo.following };
     }
 
     @Query((returns) => User, { nullable: true })
     async user(@Arg("id") id: string) {
-        if (!(await getUser(id))) return null;
-        return { id: id, ...userInfoCache[id] }
+        const res = await getUser(id);
+        if (!res) return null;
+        return { id: res.discordID, discriminator: res.discriminator, username: res.username, avatarURL: res.avatarURL, permissions: res.userInfo.permissions, following: res.userInfo.following };
     }
 
     @Query((returns) => Category, { nullable: true })
@@ -27,7 +28,7 @@ export default class DefaultResolver {
         if (!ctx.user) return null;
         const categoryInfo = await CategoryModel.findOne({ name: name });
         if (!categoryInfo) return null;
-        return { author: categoryInfo.authorID, name: categoryInfo.name, description: categoryInfo.description };
+        return categoryInfo;
     }
 
     @Query((returns) => Post, { nullable: true })
@@ -35,7 +36,35 @@ export default class DefaultResolver {
         if (!ctx.user) return null;
         const postInfo = await PostModel.findById(id);
         if (!postInfo) return null;
-        return { _id: id, author: postInfo.authorID, title: postInfo.title, content: postInfo.content, category: postInfo.category, tag: postInfo.tag, hearts: postInfo.hearts, comments: await CommentModel.findByPost(id) };
+        return postInfo;
+    }
+
+    @Query((returns) => [User])
+    async users() {
+        let users = [];
+        const dbusers = await UserModel.find({});
+        for (const i in await UserModel.find({})) {
+            const res = await getUser(dbusers[i].discordID);
+            users.push({
+                id: res.id,
+                discriminator: res.discriminator,
+                username: res.username,
+                avatarURL: res.avatarURL,
+                permissions: res.userInfo.permissions,
+                following: res.userInfo.following 
+            })
+        };
+        return users;
+    }
+
+    @Query((returns) => [Category])
+    async categories() {
+        return await CategoryModel.find({});
+    }
+
+    @Query((returns) => [Post])
+    async posts() {
+        return await PostModel.find({});
     }
 
     @Query((returns) => String)

@@ -1,11 +1,18 @@
-import { FieldResolver, Resolver, Root } from 'type-graphql'
-import Post from '../types/Post'
+import { FieldResolver, Resolver, Root } from "type-graphql";
+import Post from "../types/Post";
+
+import { CommentModel } from "../database";
 
 @Resolver(Post)
 export default class {
     @FieldResolver()
+    async _id(@Root() parent: Post) {
+        return parent._id
+    }
+
+    @FieldResolver()
     async author(@Root() parent: Post) {
-        return parent.author;
+        return parent.authorID;
     }
 
     @FieldResolver()
@@ -35,6 +42,6 @@ export default class {
 
     @FieldResolver()
     async comments(@Root() parent: Post) {
-        return parent.comments;
+        return await CommentModel.findByPost(parent._id);
     }
 }

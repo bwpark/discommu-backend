@@ -33,7 +33,7 @@ export default class MutationResolver {
         if (!ctx.user) return null;
         const categoryInfo = await CategoryModel.findOne({ name: name });
         if (!categoryInfo) return null;
-        return { author: categoryInfo.authorID, name: categoryInfo.name, description: categoryInfo.description };
+        return categoryInfo;
     }
 
     @Mutation((returns) => PostMutation, { nullable: true })
@@ -41,7 +41,7 @@ export default class MutationResolver {
         if (!ctx.user) return null;
         const postInfo = await PostModel.findById(id);
         if (!postInfo) return null;
-        return { _id: id, author: postInfo.authorID, title: postInfo.title, content: postInfo.content, category: postInfo.category, tag: postInfo.tag, hearts: postInfo.hearts, comments: await CommentModel.findByPost(id) };
+        return postInfo;
     }
 
     @Mutation((returns) => Boolean, { nullable: true })

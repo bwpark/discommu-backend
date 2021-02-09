@@ -10,7 +10,7 @@ export default class CategoryMutation {
     async edit(@Root() root: Category, @Ctx() ctx: any, @Arg("description") description: string) {
         if (!ctx.user) return false;
         const user = await getUser(ctx.user.id);
-        if ((user.userID !== root.author) && (!user.userInfo.permissions.includes("admin"))) return false;
+        if ((user.userID !== root.authorID) && (!user.userInfo.permissions.includes("admin"))) return false;
 
         const category = await CategoryModel.findOne({ name: root.name });
         await category.editDescription(description);
@@ -21,7 +21,7 @@ export default class CategoryMutation {
     async delete(@Root() root: Category, @Ctx() ctx: any) {
         if (!ctx.user) return false;
         const user = await getUser(ctx.user.id);
-        if ((user.userID !== root.author) && (!user.userInfo.permissions.includes("admin"))) return false;
+        if ((user.userID !== root.authorID) && (!user.userInfo.permissions.includes("admin"))) return false;
 
         await CategoryModel.deleteOne({ name: root.name });
         return true;

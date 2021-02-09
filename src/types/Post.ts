@@ -32,7 +32,7 @@ export default class Post {
     _id: string
 
     @Field()
-    author: string
+    authorID: string
 
     @Field()
     title: string

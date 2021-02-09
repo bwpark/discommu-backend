@@ -3,7 +3,7 @@ import { Field, ObjectType } from 'type-graphql'
 @ObjectType()
 export default class Category {
     @Field()
-    author: string
+    authorID: string
 
     @Field()
     name: string
