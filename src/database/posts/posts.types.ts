@@ -12,9 +12,6 @@ export interface IPost {
 }
 
 export interface IPostDocument extends Document, IPost {
-    editContent: (this: IPostDocument, content: string) => Promise<void>;
-    addTag: (this: IPostDocument, tag: string) => Promise<void>;
-    removeTag: (this: IPostDocument, tag: string) => Promise<void>;
     addHeart: (this: IPostDocument, userID: string) => Promise<void>;
     removeHeart: (this: IPostDocument, userID: string) => Promise<void>;
 };

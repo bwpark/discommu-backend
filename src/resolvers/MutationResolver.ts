@@ -2,15 +2,17 @@ import { Resolver, Mutation, Arg, Ctx } from "type-graphql";
 import { URLSearchParams } from "url"
 import { sign } from "jsonwebtoken";
 import { userInfoCache, getUser, safeFetch } from "../util";
-import { CategoryModel, UserModel, PostModel } from "../database";
+import { CategoryModel, UserModel, PostModel, CommentModel } from "../database";
 
 import AddCategory from "../inputs/AddCategory";
 import AddPost from "../inputs/AddPost";
 
 import config from "../../config.json";
 import fetch from "node-fetch";
+
 import UserMutation from "../types/UserMutation";
 import CategoryMutation from "../types/CategoryMutation";
+import PostMutation from "../types/PostMutation";
 
 @Resolver()
 export default class MutationResolver {
@@ -32,6 +34,14 @@ export default class MutationResolver {
         const categoryInfo = await CategoryModel.findOne({ name: name });
         if (!categoryInfo) return null;
         return { author: categoryInfo.authorID, name: categoryInfo.name, description: categoryInfo.description };
+    }
+
+    @Mutation((returns) => PostMutation, { nullable: true })
+    async post(@Ctx() ctx, @Arg("id") id: string) {
+        if (!ctx.user) return null;
+        const postInfo = await PostModel.findById(id);
+        if (!postInfo) return null;
+        return { _id: id, author: postInfo.authorID, title: postInfo.title, content: postInfo.content, category: postInfo.category, tag: postInfo.tag, hearts: postInfo.hearts, comments: await CommentModel.findByPost(id) };
     }
 
     @Mutation((returns) => Boolean, { nullable: true })
