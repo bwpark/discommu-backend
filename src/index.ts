@@ -12,6 +12,9 @@ import { getUser } from "./util";
 import DefaultResolver from "./resolvers/DefaultResolver";
 import MutationResolver from "./resolvers/MutationResolver";
 import UserResolver from "./resolvers/UserResolver";
+import CategoryResolver from "./resolvers/CategoryResolver";
+import PostResolver from "./resolvers/PostResolver";
+import CommentResolver from "./resolvers/CommentResolver";
 
 process.on("exit", () => {
     disconnect();
@@ -21,7 +24,8 @@ process.on("exit", () => {
 (async () => {
     const schema = await buildSchema({
         resolvers: [
-            DefaultResolver, MutationResolver, UserResolver
+            DefaultResolver, MutationResolver, UserResolver,
+            CategoryResolver, PostResolver, CommentResolver
         ],
     });
 

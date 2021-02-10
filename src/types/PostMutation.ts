@@ -1,6 +1,6 @@
 import { ObjectType, Field, Root, Ctx, Arg } from "type-graphql";
 import { getUser } from "../util";
-import { PostModel } from "../database";
+import { PostModel, CommentModel } from "../database";
 
 import Post from "./Post";
 import EditPost from "../inputs/EditPost"
@@ -51,5 +51,14 @@ export default class PostMutation {
         await post.removeHeart(ctx.user.id);
 
         return true;
+    }
+
+    @Field((returns) => String)
+    async addComment(@Root() root: Post, @Ctx() ctx: any, @Arg("content") content: string, @Arg("reply", { defaultValue: ''}) reply: string) {
+        if (!ctx.user) return false;
+
+        if ((await CommentModel.findByPost(root._id)).length === 50) return false;
+        const comment = await CommentModel.create({ postID: root._id, content: content, reply: reply || '', timestamp: Date.now(), authorID: ctx.user.id });
+        return comment._id;
     }
 }

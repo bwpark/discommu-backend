@@ -8,7 +8,10 @@ const CommentSchema = new Schema<ICommentDocument, ICommentModel>({
     authorID: String,
     content: String,
     timestamp: Number,
-    reply: String,
+    reply:  {
+        type: String,
+        default: ""
+    },
     postID: String
 });
 

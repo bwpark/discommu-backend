@@ -11,7 +11,7 @@ export default class {
     }
 
     @FieldResolver()
-    async author(@Root() parent: Post) {
+    async authorID(@Root() parent: Post) {
         return parent.authorID;
     }
 
@@ -36,12 +36,17 @@ export default class {
     }
 
     @FieldResolver()
+    async timestamp(@Root() parent: Post) {
+        return parent.timestamp;
+    }
+
+    @FieldResolver()
     async hearts(@Root() parent: Post) {
         return parent.hearts;
     }
 
     @FieldResolver()
     async comments(@Root() parent: Post) {
-        return await CommentModel.findByPost(parent._id);
+        return (await CommentModel.findByPost(parent._id)).map(i => i._doc);
     }
 }

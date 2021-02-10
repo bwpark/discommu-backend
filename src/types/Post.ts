@@ -1,30 +1,6 @@
-import { Field, ObjectType, ID } from 'type-graphql'
+import { Field, ObjectType, ID } from "type-graphql";
+import { Comment, comment } from "./Comment";
 
-type comment = {
-    _id: string,
-    authorID: string,
-    content: string,
-    timestamp: number,
-    reply: string
-}
-
-@ObjectType()
-class Comment {
-    @Field()
-    authorID: string
-
-    @Field()
-    _id: string
-
-    @Field()
-    content: string
-
-    @Field()
-    timestamp: number
-
-    @Field()
-    reply: string
-}
 
 @ObjectType()
 export default class Post {

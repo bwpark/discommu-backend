@@ -13,6 +13,7 @@ import fetch from "node-fetch";
 import UserMutation from "../types/UserMutation";
 import CategoryMutation from "../types/CategoryMutation";
 import PostMutation from "../types/PostMutation";
+import CommentMutation from "../types/CommentMutation";
 
 @Resolver()
 export default class MutationResolver {
@@ -33,7 +34,7 @@ export default class MutationResolver {
         if (!ctx.user) return null;
         const categoryInfo = await CategoryModel.findOne({ name: name });
         if (!categoryInfo) return null;
-        return categoryInfo;
+        return categoryInfo._doc;
     }
 
     @Mutation((returns) => PostMutation, { nullable: true })
@@ -41,7 +42,15 @@ export default class MutationResolver {
         if (!ctx.user) return null;
         const postInfo = await PostModel.findById(id);
         if (!postInfo) return null;
-        return postInfo;
+        return postInfo._doc;
+    }
+
+    @Mutation((returns) => CommentMutation, { nullable: true })
+    async comment(@Ctx() ctx, @Arg("id") id: string) {
+        if (!ctx.user) return null;
+        const commentInfo = await CommentModel.findById(id);
+        if (!commentInfo) return null;
+        return commentInfo._doc;
     }
 
     @Mutation((returns) => Boolean, { nullable: true })
@@ -49,7 +58,7 @@ export default class MutationResolver {
         if (!ctx.user) return false;
 
         if (await CategoryModel.findOne({ name: data.name })) return false;
-        await CategoryModel.create({ name: data.name, description: data.description});
+        await CategoryModel.create({ name: data.name, description: data.description, authorID: ctx.user.id });
         return true;
     }
 

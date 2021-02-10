@@ -13,5 +13,5 @@ export interface ICommentDocument extends Document, IComment {
 };
 
 export interface ICommentModel extends Model<ICommentDocument> {
-    findByPost: (postID: string) => Promise<Array<ICommentDocument>>;
+    findByPost: (postID: string) => Promise<Array<any>>;
 };

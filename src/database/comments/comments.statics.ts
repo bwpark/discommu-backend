@@ -1,8 +1,10 @@
-import { ICommentDocument, ICommentModel } from "./comments.types";
+import { ICommentModel } from "./comments.types";
 
 export async function findByPost(
     this: ICommentModel,
     postID: string
-): Promise<Array<ICommentDocument>> {
-    return await this.find({ postID: postID });
+): Promise<Array<any>> {
+    const res = await this.find({ postID: postID });
+    if (!res) return [];
+    return res;
 }

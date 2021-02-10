@@ -7,6 +7,7 @@ import config from "../../config.json";
 import User from "../types/User";
 import Category from "../types/Category";
 import Post from "../types/Post";
+import { Comment } from "../types/Comment";
 
 @Resolver()
 export default class DefaultResolver {
@@ -20,23 +21,28 @@ export default class DefaultResolver {
     async user(@Arg("id") id: string) {
         const res = await getUser(id);
         if (!res) return null;
-        return { id: res.discordID, discriminator: res.discriminator, username: res.username, avatarURL: res.avatarURL, permissions: res.userInfo.permissions, following: res.userInfo.following };
+        return { id: res.id, discriminator: res.discriminator, username: res.username, avatarURL: res.avatarURL, permissions: res.userInfo.permissions, following: res.userInfo.following };
     }
 
     @Query((returns) => Category, { nullable: true })
-    async category(@Ctx() ctx, @Arg("name") name: string) {
-        if (!ctx.user) return null;
+    async category(@Arg("name") name: string) {
         const categoryInfo = await CategoryModel.findOne({ name: name });
         if (!categoryInfo) return null;
-        return categoryInfo;
+        return categoryInfo._doc;
     }
 
     @Query((returns) => Post, { nullable: true })
-    async post(@Ctx() ctx, @Arg("id") id: string) {
-        if (!ctx.user) return null;
+    async post(@Arg("id") id: string) {
         const postInfo = await PostModel.findById(id);
         if (!postInfo) return null;
-        return postInfo;
+        return postInfo._doc;
+    }
+
+    @Query((returns) => Comment, { nullable: true })
+    async comment(@Arg("id") id: string) {
+        const commentInfo = await CommentModel.findById(id);
+        if (!commentInfo) return null;
+        return commentInfo._doc;
     }
 
     @Query((returns) => [User])
@@ -59,12 +65,12 @@ export default class DefaultResolver {
 
     @Query((returns) => [Category])
     async categories() {
-        return await CategoryModel.find({});
+        return (await CategoryModel.find({})).map(i => i._doc);
     }
 
     @Query((returns) => [Post])
     async posts() {
-        return await PostModel.find({});
+        return (await PostModel.find({})).map(i => i._doc);
     }
 
     @Query((returns) => String)
