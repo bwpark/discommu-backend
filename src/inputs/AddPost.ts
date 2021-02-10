@@ -3,14 +3,14 @@ import { Field, InputType } from "type-graphql";
 @InputType()
 export default class AddPost {
     @Field()
-    title: string
+    title: string;
 
     @Field()
-    content: string
+    content: string;
 
     @Field()
-    category: string
+    category: string;
 
     @Field(type => [String], { nullable: true })
-    tag: string[]
+    tag: string[];
 }

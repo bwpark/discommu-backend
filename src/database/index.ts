@@ -1,10 +1,11 @@
 import Mongoose from "mongoose";
-import config from '../../config.json'
 
-export { CategoryModel } from './categories/categories.models'
-export { PostModel } from './posts/posts.models'
-export { UserModel } from './users/users.models'
-export { CommentModel } from './comments/comments.models'
+import config from "../../config.json";
+
+export { CategoryModel } from "./categories/categories.models";
+export { PostModel } from "./posts/posts.models";
+export { UserModel } from "./users/users.models";
+export { CommentModel } from "./comments/comments.models";
 
 export let db: Mongoose.Connection;
 

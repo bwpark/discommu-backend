@@ -1,20 +1,23 @@
 import { ObjectType, Field, Root, Ctx, Arg } from "type-graphql";
-import { getUser } from "../util";
-import { PostModel, CommentModel } from "../database";
-
 import { Comment } from "./Comment";
+
+import { getUser } from "../util";
+import { CommentModel } from "../database";
 
 @ObjectType()
 export default class CommentMutation {
     @Field((returns) => Boolean)
     async edit(@Root() root: Comment, @Ctx() ctx: any, @Arg("content") content: string) {
-        if (!ctx.user) return false;
-        if (!content) return false;
+        if ((!ctx.user) || (!content)) return false;
 
         const user = await getUser(ctx.user.id);
         if ((user.userID !== root.authorID) && (!user.userInfo.permissions.includes("admin"))) return false;
 
-        await CommentModel.findByIdAndUpdate(root._id, { $set: { content: content } });
+        await CommentModel.findByIdAndUpdate(root._id, {
+            $set: {
+                content: content
+            }
+        });
         return true;
     }
 

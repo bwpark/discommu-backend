@@ -5,29 +5,29 @@ import { Comment, comment } from "./Comment";
 @ObjectType()
 export default class Post {
     @Field(type => ID)
-    _id: string
+    _id: string;
 
     @Field()
-    authorID: string
+    authorID: string;
 
     @Field()
-    title: string
+    title: string;
 
     @Field()
-    content: string
+    content: string;
 
     @Field()
-    category: string
+    category: string;
 
     @Field()
-    timestamp: number
+    timestamp: number;
 
     @Field(type => [String])
-    tag: string[]
+    tag: string[];
 
     @Field(type => [String])
-    hearts: string[]
+    hearts: string[];
 
     @Field(type => [Comment])
-    comments: comment[]
+    comments: comment[];
 }

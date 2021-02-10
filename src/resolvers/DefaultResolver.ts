@@ -2,8 +2,8 @@ import { Resolver, Arg, Ctx, Query } from "type-graphql";
 
 import { getUser } from "../util";
 import { CategoryModel, PostModel, CommentModel, UserModel } from "../database";
-
 import config from "../../config.json";
+
 import User from "../types/User";
 import Category from "../types/Category";
 import Post from "../types/Post";
@@ -14,14 +14,29 @@ export default class DefaultResolver {
     @Query((returns) => User, { nullable: true })
     me(@Ctx() ctx) {
         if (!ctx.user) return null;
-        return { id: ctx.user.discordID, discriminator: ctx.user.discriminator, username: ctx.user.username, avatarURL: ctx.user.avatarURL, permissions: ctx.user.userInfo.permissions, following: ctx.user.userInfo.following };
+        return {
+            id: ctx.user.discordID,
+            discriminator: ctx.user.discriminator,
+            username: ctx.user.username,
+            avatarURL: ctx.user.avatarURL,
+            permissions: ctx.user.userInfo.permissions,
+            following: ctx.user.userInfo.following
+        };
     }
 
     @Query((returns) => User, { nullable: true })
     async user(@Arg("id") id: string) {
         const res = await getUser(id);
         if (!res) return null;
-        return { id: res.id, discriminator: res.discriminator, username: res.username, avatarURL: res.avatarURL, permissions: res.userInfo.permissions, following: res.userInfo.following };
+
+        return {
+            id: res.id,
+            discriminator: res.discriminator,
+            username: res.username,
+            avatarURL: res.avatarURL,
+            permissions: res.userInfo.permissions,
+            following: res.userInfo.following
+        };
     }
 
     @Query((returns) => Category, { nullable: true })
@@ -47,8 +62,9 @@ export default class DefaultResolver {
 
     @Query((returns) => [User])
     async users() {
-        let users = [];
         const dbusers = await UserModel.find({});
+        let users = [];
+
         for (const i in await UserModel.find({})) {
             const res = await getUser(dbusers[i].discordID);
             users.push({
@@ -58,19 +74,22 @@ export default class DefaultResolver {
                 avatarURL: res.avatarURL,
                 permissions: res.userInfo.permissions,
                 following: res.userInfo.following 
-            })
-        };
+            });
+        }
+
         return users;
     }
 
     @Query((returns) => [Category])
     async categories() {
-        return (await CategoryModel.find({})).map(i => i._doc);
+        return (await CategoryModel.find({}))
+            .map(i => i._doc);
     }
 
     @Query((returns) => [Post])
     async posts() {
-        return (await PostModel.find({})).map(i => i._doc);
+        return (await PostModel.find({}))
+            .map(i => i._doc);
     }
 
     @Query((returns) => String)

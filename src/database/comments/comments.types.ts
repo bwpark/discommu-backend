@@ -1,11 +1,11 @@
-import { Document, Model } from "mongoose"
+import { Document, Model } from "mongoose";
 
 export interface IComment {
     authorID: string;
     content: string;
     timestamp: number;
-    reply: string; // 답장 유저 ID
-    postID: string; // Post의 _id
+    reply: string;  // 답장 유저 ID
+    postID: string;  // Post의 _id
 }
 
 export interface ICommentDocument extends Document, IComment {

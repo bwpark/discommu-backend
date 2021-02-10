@@ -1,14 +1,14 @@
 import { Resolver, Mutation, Arg, Ctx } from "type-graphql";
-import { URLSearchParams } from "url"
+import { URLSearchParams } from "url";
 import { sign } from "jsonwebtoken";
+import fetch from "node-fetch";
+
 import { userInfoCache, getUser, safeFetch } from "../util";
+import config from "../../config.json";
 import { CategoryModel, UserModel, PostModel, CommentModel } from "../database";
 
 import AddCategory from "../inputs/AddCategory";
 import AddPost from "../inputs/AddPost";
-
-import config from "../../config.json";
-import fetch from "node-fetch";
 
 import UserMutation from "../types/UserMutation";
 import CategoryMutation from "../types/CategoryMutation";
@@ -76,7 +76,7 @@ export default class MutationResolver {
             category: data.category,
             timestamp: Date.now(),
             tag: data.tag
-        })
+        });
         return post._id;
     }
 

@@ -1,13 +1,13 @@
 import "reflect-metadata";
 
 import Express from "express";
-import { connect, disconnect } from "./database";
-import config from "../config.json";
-
 import { buildSchema } from "type-graphql";
 import { ApolloServer } from "apollo-server-express";
 import { verify } from "jsonwebtoken";
+
+import { connect, disconnect } from "./database";
 import { getUser } from "./util";
+import config from "../config.json";
 
 import DefaultResolver from "./resolvers/DefaultResolver";
 import MutationResolver from "./resolvers/MutationResolver";
@@ -39,7 +39,7 @@ process.on("exit", () => {
             const token = req.headers.authorization.slice("Bearer ".length);
 
             try { res.user = verify(token, config.jwtSecret) }
-            catch { return null }
+            catch { return null }; 
 
             const data = await getUser(res.user.id);
             if (!data) return null;
@@ -48,16 +48,16 @@ process.on("exit", () => {
         },
         logger: {  
             warn(message?: any) {
-                console.warn(message)
+                console.warn(message);
             },
             debug(message?: any) {
-                console.debug(message)
+                console.debug(message);
             },
             error(message?: any) {
-                console.error(message)
+                console.error(message);
             },
             info(message?: any) {
-                console.info(message)
+                console.info(message);
             }
         }
     });
@@ -67,5 +67,5 @@ process.on("exit", () => {
     apollo.applyMiddleware({ app });
     app.listen(config.port || 8080);
     connect();
-    console.log("LOG> Server Start")
+    console.log("LOG> Server Start");
 })()

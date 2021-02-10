@@ -11,5 +11,5 @@ export async function searchPosts(
     this: IPostModel,
     query: string
 ): Promise<Array<IPostDocument>> {
-    return (await this.find()).filter(user => user.title.includes(query) || user.content.includes(query))
+    return (await this.find()).filter(user => user.title.includes(query) || user.content.includes(query));
 }

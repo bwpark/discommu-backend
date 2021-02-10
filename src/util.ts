@@ -1,9 +1,9 @@
 import fetch, { RequestInfo, RequestInit, Response } from "node-fetch";
 import { UserModel } from "./database";
 
-import config from "../config.json"
+import config from "../config.json";
 
-export let userInfoCache = {}
+export let userInfoCache = {};
 
 export const safeFetch = (
     info: RequestInfo,
@@ -24,7 +24,7 @@ export const safeFetch = (
                 _resolve as any
             )
         ).then(() => resolve(safeFetch(info, init)));
-    }
+    };
     resolve(data);
 });
 
@@ -46,11 +46,11 @@ export const getDiscordUser = async (userID: string) => {
             ? `https://cdn.discordapp.com/avatars/${json.id}/${json.avatar}.png`
             : `https://cdn.discordapp.com/embed/avatars/${Number(json.discriminator) % 5}.png`,
         discriminator: json.discriminator
-    }
+    };
 
-    userInfoCache[json.id] = data
+    userInfoCache[json.id] = data;
 
-    return data
+    return data;
 }
 
 export const getUser = async (userID: string) => {

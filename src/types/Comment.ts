@@ -12,20 +12,20 @@ export type comment = {
 @ObjectType()
 export class Comment {
     @Field()
-    authorID: string
+    authorID: string;
 
     @Field()
-    _id: string
+    _id: string;
 
     @Field()
-    content: string
+    content: string;
 
     @Field()
-    timestamp: number
+    timestamp: number;
 
     @Field()
-    reply: string
+    reply: string;
 
     @Field()
-    postID: string
+    postID: string;
 }

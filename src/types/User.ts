@@ -1,22 +1,22 @@
-import { Field, ID, ObjectType } from 'type-graphql'
+import { Field, ID, ObjectType } from "type-graphql";
 
 @ObjectType()
 export default class User {
     @Field(type => ID)
-    id: string
+    id: string;
 
     @Field()
-    discriminator: string
+    discriminator: string;
 
     @Field()
-    username: string
+    username: string;
 
     @Field()
-    avatarURL: string
+    avatarURL: string;
 
     @Field(type => [String])
-    permissions: string[]
+    permissions: string[];
 
     @Field(type => [String])
-    following: string[]
+    following: string[];
 }

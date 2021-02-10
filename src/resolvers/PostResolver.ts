@@ -7,7 +7,7 @@ import { CommentModel } from "../database";
 export default class {
     @FieldResolver()
     async _id(@Root() parent: Post) {
-        return parent._id
+        return parent._id;
     }
 
     @FieldResolver()
@@ -47,6 +47,7 @@ export default class {
 
     @FieldResolver()
     async comments(@Root() parent: Post) {
-        return (await CommentModel.findByPost(parent._id)).map(i => i._doc);
+        return (await CommentModel.findByPost(parent._id))
+            .map(i => i._doc);
     }
 }

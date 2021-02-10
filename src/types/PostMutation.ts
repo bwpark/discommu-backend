@@ -1,9 +1,10 @@
 import { ObjectType, Field, Root, Ctx, Arg } from "type-graphql";
+
 import { getUser } from "../util";
 import { PostModel, CommentModel } from "../database";
 
 import Post from "./Post";
-import EditPost from "../inputs/EditPost"
+import EditPost from "../inputs/EditPost";
 
 @ObjectType()
 export default class PostMutation {
@@ -16,7 +17,13 @@ export default class PostMutation {
         const user = await getUser(ctx.user.id);
         if ((user.userID !== root.authorID) && (!user.userInfo.permissions.includes("admin"))) return false;
 
-        await PostModel.findByIdAndUpdate(root._id, { $set: { title: data.title, content: data.content, tag: data.tag } })
+        await PostModel.findByIdAndUpdate(root._id, {
+            $set: {
+                title: data.title,
+                content: data.content,
+                tag: data.tag 
+            }
+        });
         return true;
     }
 
@@ -34,8 +41,8 @@ export default class PostMutation {
     @Field((returns) => Boolean)
     async addHeart(@Root() root: Post, @Ctx() ctx: any) {
         if (!ctx.user) return false;
-
         if (root.hearts.includes(ctx.user.id)) return false;
+
         const post = await PostModel.findById(root._id);
         await post.addHeart(ctx.user.id);
 
@@ -45,8 +52,8 @@ export default class PostMutation {
     @Field((returns) => Boolean)
     async removeHeart(@Root() root: Post, @Ctx() ctx: any) {
         if (!ctx.user) return false;
-
         if (!root.hearts.includes(ctx.user.id)) return false;
+
         const post = await PostModel.findById(root._id);
         await post.removeHeart(ctx.user.id);
 
@@ -56,8 +63,8 @@ export default class PostMutation {
     @Field((returns) => String)
     async addComment(@Root() root: Post, @Ctx() ctx: any, @Arg("content") content: string, @Arg("reply", { defaultValue: ''}) reply: string) {
         if (!ctx.user) return false;
-
         if ((await CommentModel.findByPost(root._id)).length === 50) return false;
+
         const comment = await CommentModel.create({ postID: root._id, content: content, reply: reply || '', timestamp: Date.now(), authorID: ctx.user.id });
         return comment._id;
     }

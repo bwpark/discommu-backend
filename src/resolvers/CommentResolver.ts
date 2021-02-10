@@ -1,5 +1,5 @@
-import { FieldResolver, Resolver, Root } from 'type-graphql'
-import { Comment } from '../types/Comment'
+import { FieldResolver, Resolver, Root } from "type-graphql";
+import { Comment } from "../types/Comment";
 
 @Resolver(Comment)
 export default class {

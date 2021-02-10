@@ -1,6 +1,7 @@
-import { ObjectType, Field, Arg, Ctx, Root } from 'type-graphql'
-import User from './User'
-import { getUser } from '../util'
+import { ObjectType, Field, Arg, Ctx, Root } from "type-graphql";
+import User from "./User";
+
+import { getUser } from "../util";
 import config from "../../config.json";
 
 @ObjectType()

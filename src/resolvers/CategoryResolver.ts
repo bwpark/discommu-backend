@@ -1,5 +1,5 @@
-import { FieldResolver, Resolver, Root } from 'type-graphql'
-import Category from '../types/Category'
+import { FieldResolver, Resolver, Root } from "type-graphql";
+import Category from "../types/Category";
 
 @Resolver(Category)
 export default class {
