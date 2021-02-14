@@ -1,5 +1,5 @@
 {
-    "port": 8080,
+    "port": 3000,
     "discordAPIEndpoint": "https://discord.com/api/v8",
     "jwtSecret": "",
     "botToken": "",

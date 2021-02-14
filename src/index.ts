@@ -65,7 +65,7 @@ process.on("exit", () => {
     const app: Express.Application = Express();
 
     apollo.applyMiddleware({ app });
-    app.listen(config.port || 8080);
+    app.listen(config.port || 3000);
     connect();
     console.log("LOG> Server Start");
 })()
