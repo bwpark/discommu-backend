@@ -64,7 +64,6 @@ export default class MutationResolver {
 
     @Mutation((returns) => String, { nullable: true })
     async addPost(@Ctx() ctx, @Arg("data") data: AddPost) {
-        console.log(data)
         if (!ctx.user) return false;
         data.tag = data.tag ? data.tag.filter(tag => tag.length) : [];
 

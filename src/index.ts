@@ -43,8 +43,7 @@ process.on("exit", () => {
 
             const data = await getUser(res.user.id);
             if (!data) return null;
-
-            return res;
+            return { user: data }; 
         },
         logger: {  
             warn(message?: any) {
