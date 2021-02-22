@@ -15,7 +15,7 @@ export default class DefaultResolver {
     me(@Ctx() ctx) {
         if (!ctx.user) return null;
         return {
-            id: ctx.user.discordID,
+            id: ctx.user.id,
             discriminator: ctx.user.discriminator,
             username: ctx.user.username,
             avatarURL: ctx.user.avatarURL,

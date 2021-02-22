@@ -4,6 +4,11 @@ import User from "../types/User";
 @Resolver(User)
 export default class {
     @FieldResolver({ nullable: true })
+    async id(@Root() parent: User) {
+        return parent.id;
+    }
+
+    @FieldResolver({ nullable: true })
     async username(@Root() parent: User) {
         return parent.username;
     }
