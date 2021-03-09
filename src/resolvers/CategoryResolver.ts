@@ -1,7 +1,7 @@
 import { FieldResolver, Resolver, Root } from "type-graphql";
 import { PostModel } from "../database";
 
-import Category from "../types/Category";
+import { Category } from "../types/Category";
 
 @Resolver(Category)
 export default class {

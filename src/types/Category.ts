@@ -2,8 +2,15 @@ import { Field, ObjectType } from "type-graphql";
 
 import { Post, post } from "./Post";
 
+export type category = {
+    authorID: string,
+    name: string,
+    description: string,
+    posts: post[]
+}
+
 @ObjectType()
-export default class Category {
+export class Category {
     @Field()
     authorID: string;
 

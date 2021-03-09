@@ -4,8 +4,8 @@ import { getUser } from "../util";
 import { CategoryModel, PostModel, CommentModel, UserModel } from "../database";
 import config from "../../config.json";
 
-import User from "../types/User";
-import Category from "../types/Category";
+import { User } from "../types/User";
+import { Category } from "../types/Category";
 import { Post } from "../types/Post";
 import { Comment } from "../types/Comment";
 

@@ -1,5 +1,5 @@
 import { FieldResolver, Resolver, Root } from "type-graphql";
-import User from "../types/User";
+import { User } from "../types/User";
 
 @Resolver(User)
 export default class {
