@@ -6,7 +6,7 @@ import config from "../../config.json";
 
 import User from "../types/User";
 import Category from "../types/Category";
-import Post from "../types/Post";
+import { Post } from "../types/Post";
 import { Comment } from "../types/Comment";
 
 @Resolver()

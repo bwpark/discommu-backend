@@ -1,5 +1,5 @@
 import { FieldResolver, Resolver, Root } from "type-graphql";
-import Post from "../types/Post";
+import { Post } from "../types/Post";
 
 import { CommentModel } from "../database";
 
@@ -17,6 +17,7 @@ export default class {
 
     @FieldResolver()
     async title(@Root() parent: Post) {
+        console.log(parent)
         return parent.title;
     }
 

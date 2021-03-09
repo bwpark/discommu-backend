@@ -3,7 +3,7 @@ import { ObjectType, Field, Root, Ctx, Arg } from "type-graphql";
 import { getUser } from "../util";
 import { PostModel, CommentModel } from "../database";
 
-import Post from "./Post";
+import { Post } from "./Post";
 import EditPost from "../inputs/EditPost";
 
 @ObjectType()

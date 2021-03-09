@@ -1,9 +1,20 @@
 import { Field, ObjectType, ID } from "type-graphql";
 import { Comment, comment } from "./Comment";
 
+export type post = {
+    _id: string,
+    authorID: string,
+    title: string,
+    content: string,
+    category: string,
+    timestamp: number,
+    tag: string[],
+    hearts: string[],
+    comments: comment[]
+}
 
 @ObjectType()
-export default class Post {
+export class Post {
     @Field(type => ID)
     _id: string;
 
