@@ -81,9 +81,36 @@ export default class DefaultResolver {
     }
 
     @Query((returns) => [Category])
-    async categories() {
-        return (await CategoryModel.find({}))
-            .map(i => i._doc);
+    async categories(@Arg("searchType", { nullable: true }) stype?: string, @Arg("searchQuery", { nullable: true }) squery?: string) {
+        if (!squery) squery = '';
+        let res;
+        if (!!squery) { res = await CategoryModel.find({$text: {$search: squery}}) }
+        else { res = await CategoryModel.find() }
+        if (!!stype) {
+            switch (stype) {
+                case 'newest': break;
+                case 'alphabet': {
+                    res = res.sort((a, b) => {
+                        if (a.name > b.name) return 1;
+                        else if (a.name < b.name) return -1;
+                        else if (a.name === b.name) return 0;
+                    })
+                }
+                case 'posts': {
+                    res = await res.sort(async (a, b) => {
+                        const ap = (await PostModel.find({ category: a.name })).length
+                        const bp = (await PostModel.find({ category: b.name })).length
+                        if (ap > bp) return 1;
+                        else if (ap < bp) return -1;
+                        else if (ap === bp) return 0;
+                    })
+                }
+                default: {
+                    break
+                }
+            }
+        }
+        return res.map(i => i._doc);
     }
 
     @Query((returns) => [Post])

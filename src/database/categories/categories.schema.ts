@@ -8,6 +8,7 @@ const CategorySchema = new Schema<ICategoryDocument, ICategoryModel>({
     name: String,
     description: String
 });
+CategorySchema.index({ name: 'text', description: 'text'})
 
 CategorySchema.methods.editDescription = editDescription;
 

@@ -1,9 +1,10 @@
 import { Field, ObjectType } from "type-graphql";
 
 import { Post, post } from "./Post";
+import { User, user } from "./User";
 
 export type category = {
-    authorID: string,
+    author: user
     name: string,
     description: string,
     posts: post[]
@@ -11,11 +12,13 @@ export type category = {
 
 @ObjectType()
 export class Category {
-    @Field()
     authorID: string;
 
     @Field()
     name: string;
+
+    @Field(type => User)
+    author: user
 
     @Field()
     description: string;

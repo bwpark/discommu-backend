@@ -17,7 +17,6 @@ export default class {
 
     @FieldResolver()
     async title(@Root() parent: Post) {
-        console.log(parent)
         return parent.title;
     }
 
