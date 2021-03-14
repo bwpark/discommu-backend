@@ -1,7 +1,7 @@
 version: '2'
 
 services:
-  backend:
+  discommu-backend:
     build: .
     volumes:
       - ./config.json:/app/config.json
