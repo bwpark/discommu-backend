@@ -13,7 +13,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
-          scripts: |
+          script: |
             whoami
             cd projects/discommu-backend
             git pull origin master
