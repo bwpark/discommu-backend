@@ -17,4 +17,4 @@ jobs:
             whoami
             cd projects/discommu-backend
             git pull origin master
-            docker-compose up -d --build
+            sudo docker-compose up -d --build
