@@ -1,11 +1,24 @@
 import { FieldResolver, Resolver, Root } from "type-graphql";
+import { getUser } from "../util";
+
 import { Comment } from "../types/Comment";
+import { User } from "../types/User";
 
 @Resolver(Comment)
 export default class {
-    @FieldResolver()
-    async authorID(@Root() parent: Comment) {
-        return parent.authorID;
+    @FieldResolver(returns => User)
+    async author(@Root() parent: Comment) {
+        const res = await getUser(parent.authorID)
+        if (!res) return null;
+
+        return {
+            id: res.id,
+            discriminator: res.discriminator,
+            username: res.username,
+            avatarURL: res.avatarURL,
+            permissions: res.userInfo.permissions,
+            following: res.userInfo.following
+        };
     }
 
     @FieldResolver()

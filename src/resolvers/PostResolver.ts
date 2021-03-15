@@ -1,7 +1,10 @@
 import { FieldResolver, Resolver, Root } from "type-graphql";
+
 import { Post } from "../types/Post";
+import { User } from "../types/User";
 
 import { CommentModel } from "../database";
+import { getUser } from "../util";
 
 @Resolver(Post)
 export default class {
@@ -10,9 +13,19 @@ export default class {
         return parent._id;
     }
 
-    @FieldResolver()
-    async authorID(@Root() parent: Post) {
-        return parent.authorID;
+    @FieldResolver(returns => User)
+    async author(@Root() parent: Post) {
+        const res = await getUser(parent.authorID)
+        if (!res) return null;
+
+        return {
+            id: res.id,
+            discriminator: res.discriminator,
+            username: res.username,
+            avatarURL: res.avatarURL,
+            permissions: res.userInfo.permissions,
+            following: res.userInfo.following
+        };
     }
 
     @FieldResolver()
