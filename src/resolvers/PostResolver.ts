@@ -54,6 +54,11 @@ export default class {
     }
 
     @FieldResolver()
+    async views(@Root() parent: Post) {
+        return parent.views;
+    }
+
+    @FieldResolver()
     async hearts(@Root() parent: Post) {
         return parent.hearts;
     }

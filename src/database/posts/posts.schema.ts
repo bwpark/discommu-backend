@@ -10,6 +10,7 @@ const PostSchema = new Schema<IPostDocument, IPostModel>({
     content: String,
     category: String,
     timestamp: Number,
+    views: Number,
 
     tag: {
         type: Array,
@@ -20,6 +21,7 @@ const PostSchema = new Schema<IPostDocument, IPostModel>({
         default: []
     }
 });
+PostSchema.index({ title: 'text', content: 'text'})
 
 PostSchema.statics.findByTag = findByTag;
 PostSchema.statics.searchPosts = searchPosts;

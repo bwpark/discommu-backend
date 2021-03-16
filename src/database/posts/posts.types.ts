@@ -6,6 +6,7 @@ export interface IPost {
     content: string;
     category: string;
     timestamp: number;
+    views: number;
 
     tag?: string[];
     hearts?: string[];

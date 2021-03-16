@@ -10,6 +10,7 @@ export type post = {
     content: string,
     category: string,
     timestamp: number,
+    views: number,
     tag: string[],
     hearts: string[],
     comments: comment[]
@@ -36,6 +37,9 @@ export class Post {
 
     @Field()
     timestamp: number;
+
+    @Field()
+    views: number;
 
     @Field(type => [String])
     tag: string[];

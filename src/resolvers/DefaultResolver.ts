@@ -114,9 +114,45 @@ export default class DefaultResolver {
     }
 
     @Query((returns) => [Post])
-    async posts() {
-        return (await PostModel.find({}))
-            .map(i => i._doc);
+    async posts(@Arg("searchType", { nullable: true }) stype?: string, @Arg("searchQuery", { nullable: true }) squery?: string, @Arg("tags", type => [String], { nullable: true }) tags?: string[], @Arg("category", { nullable: true }) category?: string) {
+        if (!squery) squery = '';
+        let res;
+        if (!!squery) { res = await PostModel.find({$text: {$search: squery}, ...(!category ? {} : { category })}) }
+        else { res = await PostModel.find(!category ? {} : { category }) }
+        if (!!tags) {
+            res = res.filter(r => tags.some((e, i, a) => r.tag.includes(e)))
+        }
+
+        if (!!stype) {
+            switch (stype) {
+                case 'newest': break;
+                case 'alphabet': {
+                    res = res.sort((a, b) => {
+                        if (a.title > b.title) return 1;
+                        else if (a.title < b.title) return -1;
+                        else if (a.title === b.title) return 0;
+                    })
+                }
+                case 'hearts': {
+                    res = res.sort((a, b) => {
+                        if (a.hearts.length > b.hearts.length) return 1;
+                        else if (a.hearts.length < b.hearts.length) return -1;
+                        else if (a.hearts.length === b.hearts.length) return 0;
+                    })
+                }
+                case 'views': {
+                    res = res.sort((a, b) => {
+                        if (a.views > b.views) return 1;
+                        else if (a.views < b.views) return -1;
+                        else if (a.views === b.views) return 0;
+                    })
+                }
+                default: {
+                    break
+                }
+            }
+        }
+        return res.map(i => i._doc);
     }
 
     @Query((returns) => String)
