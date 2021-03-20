@@ -13,3 +13,7 @@
 ## Using yarn
 2. type `yarn`
 3. type `yarn start`
+
+
+# Contribute
+You can contribute by reporting a bug or adding a feature!
