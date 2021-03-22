@@ -1,4 +1,4 @@
-name: Azure Deploy
+name: Vultr Deploy
 on:
   push:
     branches: [ master ]
