@@ -15,5 +15,9 @@
 3. type `yarn start`
 
 
+# Help
+You can get help in [Team Kat Discord](https://discord.gg/R5UG5mR)
+
+
 # Contribute
 You can contribute by reporting a bug or adding a feature!
