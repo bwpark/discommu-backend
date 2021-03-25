@@ -4,20 +4,20 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/2b4d9ca6bbdd4469abc29d849bf20fea)](https://www.codacy.com?utm_source=github.com&utm_medium=referral&utm_content=Team-Kat/discommu-backend&utm_campaign=Badge_Grade)
 ![Azure Deploy](https://github.com/Team-Kat/discommu-backend/actions/workflows/deploy.yml/badge.svg)
 
-# Use
+## Use
 1. Create config.json and fill the blanks
 
-## Using docker
+### Using docker
 2. type `docker-compose up`
 
-## Using yarn
+### Using yarn
 2. type `yarn`
 3. type `yarn start`
 
 
-# Help
+## Help
 You can get help in [Team Kat Discord](https://discord.gg/R5UG5mR)
 
 
-# Contribute
+## Contribute
 You can contribute by reporting a bug or adding a feature!
