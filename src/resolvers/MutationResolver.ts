@@ -74,7 +74,8 @@ export default class MutationResolver {
             content: data.content,
             category: data.category,
             timestamp: Date.now(),
-            tag: data.tag
+            tag: data.tag,
+            views: 0
         });
         return post._id;
     }
