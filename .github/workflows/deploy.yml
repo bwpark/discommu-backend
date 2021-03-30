@@ -1,4 +1,4 @@
-name: Azure Deploy
+name: Vultr Deploy
 on:
   push:
     branches: [ master ]
@@ -17,4 +17,4 @@ jobs:
             whoami
             cd projects/discommu-backend
             git pull origin master
-            sudo docker-compose up -d --build
+            docker-compose up -d --build
