@@ -6,7 +6,8 @@ export type user = {
     username: string,
     avatarURL: string,
     permmissions: string[],
-    following: string[]
+    following: user[],
+    follower: string[]
 }
 
 @ObjectType()
@@ -26,6 +27,9 @@ export class User {
     @Field(type => [String])
     permissions: string[];
 
-    @Field(type => [String])
+    @Field(type => [User])
     following: string[];
+
+    @Field(type => [User])
+    follower: string[];
 }
